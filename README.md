@@ -22,7 +22,7 @@ The following **additional** features are implemented:
 - [x] Add Bookmark feature! (not completed implemented but the red ribbon works)
 - [x] Show cast information in detail view
 - [x] Similar Movies now can be clicked to show its details
-- [x] Justify-alignment text in UILabel (the default setting does not support multi-line UILabel)
+- [x] Justify-alignment text in UILabel (the default setting does not support justify-aligment for multi-line UILabel)
 - [x] Browse poster in Fullscreen mode
 - [x] Improved UI (star rating view and some details polished)
 
