@@ -32,7 +32,9 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
-
+Too large to be shown on Github!
+Go see here!
+[http://i.imgur.com/WQ6zSzg.gif](http://i.imgur.com/WQ6zSzg.gif)
 <img src='http://i.imgur.com/WQ6zSzg.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
