@@ -19,10 +19,11 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [x] Add Bookmark feature!
+- [x] Add Bookmark feature! (not completed implemented but the red ribbon works)
 - [x] Show cast information in detail view
 - [x] Similar Movies now can be clicked to show its details
 - [x] Justify-alignment text in UILabel
+- [x] Browse poster in Fullscreen mode
 
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
