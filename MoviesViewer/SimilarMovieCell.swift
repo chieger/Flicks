@@ -9,7 +9,7 @@
 import UIKit
 
 class SimilarMovieCell: UICollectionViewCell {
-    
+    var movieId:Int = 0
     @IBOutlet weak var similarPoster: UIImageView!
     
 }

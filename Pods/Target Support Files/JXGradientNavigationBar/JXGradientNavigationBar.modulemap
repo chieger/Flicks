@@ -1,0 +1,6 @@
+framework module JXGradientNavigationBar {
+  umbrella header "JXGradientNavigationBar-umbrella.h"
+
+  export *
+  module * { export * }
+}

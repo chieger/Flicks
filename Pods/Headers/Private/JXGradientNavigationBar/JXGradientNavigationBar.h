@@ -1,0 +1,1 @@
+../../../JXGradientNavigationBar/JXGradientNavigationBar/JXGradientNavigationBar.h

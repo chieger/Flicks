@@ -85,13 +85,17 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-MoviesViewer/AFNetworking.framework"
+  install_framework "Pods-MoviesViewer/Cosmos.framework"
   install_framework "Pods-MoviesViewer/FMDB.framework"
+  install_framework "Pods-MoviesViewer/JXGradientNavigationBar.framework"
   install_framework "Pods-MoviesViewer/MJRefresh.framework"
   install_framework "Pods-MoviesViewer/PKHUD.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-MoviesViewer/AFNetworking.framework"
+  install_framework "Pods-MoviesViewer/Cosmos.framework"
   install_framework "Pods-MoviesViewer/FMDB.framework"
+  install_framework "Pods-MoviesViewer/JXGradientNavigationBar.framework"
   install_framework "Pods-MoviesViewer/MJRefresh.framework"
   install_framework "Pods-MoviesViewer/PKHUD.framework"
 fi

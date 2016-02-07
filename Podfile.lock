@@ -14,21 +14,27 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
+  - Cosmos (1.1.5)
   - FMDB (2.6):
     - FMDB/standard (= 2.6)
   - FMDB/standard (2.6)
+  - JXGradientNavigationBar (0.1.1)
   - MJRefresh (3.1.0)
   - PKHUD (2.2.5)
 
 DEPENDENCIES:
   - AFNetworking
+  - Cosmos (~> 1.1)
   - FMDB
+  - JXGradientNavigationBar
   - MJRefresh
   - PKHUD
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
+  Cosmos: d05465696561ccb50fa8b7574026326bb23d654b
   FMDB: c1968bab3ab0aed38f66cb778ae1e7fa9a652b6e
+  JXGradientNavigationBar: b9e8e723d64098c94ad4a65af5646d5bbf083361
   MJRefresh: 743e6404967d1c2c688472ea3ecfde247d872db4
   PKHUD: 15d9db01fb008bb9247c6d785c585f587955b113
 

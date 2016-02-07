@@ -4,9 +4,11 @@
 use_frameworks!
 
 target 'MoviesViewer' do
-	pod "PKHUD"
+	pod 'PKHUD'
 	pod 'AFNetworking'
 	pod 'FMDB'
 	pod 'MJRefresh'	
+	pod 'JXGradientNavigationBar'
+	pod 'Cosmos', '~> 1.1'
 end
 

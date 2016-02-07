@@ -11,10 +11,14 @@ import AFNetworking
 import PKHUD
 import MJRefresh
 
+
+
 class MoviesViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, UISearchBarDelegate {
+    let gradientLayer = CAGradientLayer()
     var movies: [NSDictionary]?
     var filteredMovies: [NSDictionary]?
     var header: MJRefreshNormalHeader? = nil
+    var endpoint: String!
 
     @IBOutlet weak var networkProblemView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -39,7 +43,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print(sender?.description)
+//        print(sender?.description)
         if segue.identifier == "gotoMovieDetail" {
             let destinationView:detailMoviePageController = segue.destinationViewController as! detailMoviePageController
             destinationView.movieId = (sender as! MovieCollectoinCell).movieId
@@ -52,7 +56,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func fetchMoivesData(pullFlag: Bool) {
         let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
-        let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        let url = NSURL(string: "https://api.themoviedb.org/3/movie/\(self.endpoint)?api_key=\(apiKey)")
         let request = NSURLRequest(URL: url!)
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -91,6 +95,20 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         task.resume()
     }
     
+    
+
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        
+        //LightContent
+        return UIStatusBarStyle.Default
+        
+        //Default
+        //return UIStatusBarStyle.Default
+        
+    }
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.dataSource = self
@@ -100,12 +118,6 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         let onTapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         onTapGesture.delegate = self
         self.view.addGestureRecognizer(onTapGesture)
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 179/255, green: 0, blue: 0, alpha: 1.0)
-        self.navigationController?.navigationBar.tintColor = UIColor.yellowColor()
-        self.navigationController?.navigationBar.topItem!.title = "Flicks"
-        self.tabBarController?.tabBar.barTintColor = UIColor(red: 179/255, green: 0, blue: 0, alpha: 1.0)
-        self.tabBarController?.tabBar.tintColor = UIColor.yellowColor()
-
 
         PKHUD.sharedHUD.contentView = PKHUDProgressView()
         PKHUD.sharedHUD.show()
@@ -133,14 +145,9 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
    
     // This method updates filteredData based on the text in the Search Box
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        // When there is no text, filteredData is the same as the original data
         if searchText.isEmpty {
             filteredMovies = movies
         } else {
-            // The user has entered text into the search box
-            // Use the filter method to iterate over all items in the data array
-            // For each item, return true if the item should be included and false if the
-            // item should NOT be included
             filteredMovies = searchText.isEmpty ? movies : movies!.filter({(dataItem: NSDictionary) -> Bool in
                 // If dataItem matches the searchText, return true to include it
                 if (dataItem["title"] as! String).rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil {
@@ -151,6 +158,25 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
             })
         }
         collectionView.reloadData()
+    }
+    
+    func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+        let cell:MovieCollectoinCell = collectionView.cellForItemAtIndexPath(indexPath) as! MovieCollectoinCell
+        cell.layer.cornerRadius = 10.0
+        cell.layer.borderColor = UIColor.whiteColor().CGColor
+        cell.layer.borderWidth = 3.0
+        return true
+    }
+    
+    func collectionView(collectionView: UICollectionView, didUnhighlightItemAtIndexPath indexPath: NSIndexPath) {
+        if collectionView == self.collectionView {
+            let cell:MovieCollectoinCell = collectionView.cellForItemAtIndexPath(indexPath) as! MovieCollectoinCell
+            UIView.animateWithDuration(0.2, animations: { () -> Void in
+                }, completion: { (sucess) -> Void in
+                cell.layer.borderWidth = 0
+            })
+
+        }
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -165,27 +191,48 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("MovieCollectoinCell", forIndexPath: indexPath) as! MovieCollectoinCell
         let movie = filteredMovies![indexPath.row]
         if let posterPath = movie["poster_path"] as? String {
-            let posterBaseUrl = "http://image.tmdb.org/t/p/w500"
+            let posterBaseUrl = "http://image.tmdb.org/t/p/w45"
             let posterUrl = NSURL(string: posterBaseUrl + posterPath)
             let imageRequest = NSURLRequest(URL: posterUrl!)
+            let largeImageBaseUrl = "http://image.tmdb.org/t/p/original"
+            let largePosterUrl = NSURL(string: largeImageBaseUrl + posterPath)
+            let fullImageRequest = NSURLRequest(URL: largePosterUrl!)
             cell.movieId = movie["id"] as! Int
             cell.posterViewInCollectionCell.setImageWithURLRequest(
                 imageRequest,
                 placeholderImage: nil,
                 success: { (imageRequest, imageResponse, image) -> Void in
                     
-                    // imageResponse will be nil if the image is cached
-                    if imageResponse != nil {
-                        print("Image was NOT cached, fade in image")
                         cell.posterViewInCollectionCell.alpha = 0.0
                         cell.posterViewInCollectionCell.image = image
                         UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            
                             cell.posterViewInCollectionCell.alpha = 1.0
+                            
+                            }, completion: { (sucess) -> Void in
+                                
+                                // The AFNetworking ImageView Category only allows one request to be sent at a time
+                                cell.posterViewInCollectionCell.setImageWithURLRequest(
+                                    fullImageRequest,
+                                    placeholderImage: image,
+                                    success: { (largeImageRequest, largeImageResponse, largeImage) -> Void in
+                                        
+                                        cell.posterViewInCollectionCell.image = largeImage;
+                                        
+                                    },
+                                    failure: { (request, response, error) -> Void in
+
+                                })
                         })
-                    } else {
-                        print("Image was cached so just update the image")
-                        cell.posterViewInCollectionCell.image = image
-                    }
+
+
+                        cell.posterViewInCollectionCell.setImageWithURLRequest(fullImageRequest, placeholderImage: nil, success: { (fullImageRequest, newimageResponse, newimage) -> Void in
+                            cell.posterViewInCollectionCell.image = newimage
+                            
+                            }, failure: { (fullImageRequest, newimageResponse, error) -> Void in
+                                // do something for the failure condition
+                        })
+
                 },
                 failure: { (imageRequest, imageResponse, error) -> Void in
                     // do something for the failure condition

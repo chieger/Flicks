@@ -10,6 +10,7 @@
 #define OCBridge_h
 
 #import "MJRefresh/MJRefresh.h"
+#import "JXGradientNavigationBar/JXGradientNavigationBar.h"
 
 
 
