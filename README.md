@@ -34,8 +34,11 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough 
 
 Here's a walkthrough of implemented user stories:
-Too large to be shown on Github!
-Go see here!
+
+*Too large to be shown on Github!*
+
+*Go see here!*
+
 [http://i.imgur.com/dplfFFK.gifv](http://i.imgur.com/dplfFFK.gifv)
 
 
