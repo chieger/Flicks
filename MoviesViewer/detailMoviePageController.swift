@@ -357,12 +357,12 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
                 avatarTransform = CATransform3DScale(avatarTransform, 1.0 - avatarScaleFactor, 1.0 - avatarScaleFactor, 0)
                 
                 if offset <= offset_HeaderStop {
-                    if posterView.layer.zPosition < header.layer.zPosition{
+                    if posterView.layer.zPosition < header.layer.zPosition {
                         header.layer.zPosition = 0
                     }
                     
                 }else {
-                    if posterView.layer.zPosition >= header.layer.zPosition{
+                    if posterView.layer.zPosition >= header.layer.zPosition {
                         header.layer.zPosition = 2
                     }
                 }
