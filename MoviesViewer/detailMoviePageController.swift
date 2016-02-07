@@ -10,15 +10,24 @@ import UIKit
 import PKHUD
 import AFNetworking
 import Cosmos
+import FMDB
 
+// API key
 let apiKey = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
 
+// DB parameters
+let filemgr = NSFileManager.defaultManager()
+let dirPaths = filemgr.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+let databasePath = dirPaths[0].URLByAppendingPathComponent("favs.db").path!
+
+// Animation parameters
 let offset_HeaderStop:CGFloat = 20 // At this offset the Header stops its transformations
 let offset_B_LabelHeader:CGFloat = 95.0 // At this offset the Black label reaches the Header
 let distance_W_LabelHeader:CGFloat = 35.0 // The distance between the bottom of the Header and the top
 
 class detailMoviePageController: UIViewController, UIScrollViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     var movieId:Int = -1
+    var favState:Int = 0
     var apiResult:NSDictionary?
     
     @IBOutlet weak var castProfilesCollection: UICollectionView!
@@ -33,6 +42,8 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var networkTip: UIView!
     
+    @IBOutlet weak var favButton: UIButton!
+    
     var backDrop: UIImageView?
     var movies = [NSDictionary]()
     var movieObjs: Movie?
@@ -43,6 +54,90 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
         fetchSimilarMovieDetail()
         fetchMovieDetail()
     }
+    
+    func checkDB() {
+        let filemgr = NSFileManager.defaultManager()
+        let dirPaths = filemgr.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        
+        let databasePath = dirPaths[0].URLByAppendingPathComponent("favs.db").path!
+        if !filemgr.fileExistsAtPath(databasePath as String) {
+            
+            let contactDB = FMDatabase(path: databasePath as String)
+            
+            if contactDB == nil {
+                print("Error: \(contactDB.lastErrorMessage())")
+            }
+            
+            if contactDB.open() {
+                let sql_stmt = "CREATE TABLE IF NOT EXISTS FAVS (ID INTEGER PRIMARY KEY AUTOINCREMENT, MOVIEID TEXT)"
+                if !contactDB.executeStatements(sql_stmt) {
+                    print("Error: \(contactDB.lastErrorMessage())")
+                }
+                contactDB.close()
+            } else {
+                print("Error: \(contactDB.lastErrorMessage())")
+            }
+        }
+    }
+    
+    @IBAction func addFavTap(sender: AnyObject) {
+        let contactDB = FMDatabase(path: databasePath as String)
+        if self.favState == 0 {
+            if let id = self.movieObjs?.id {
+                if contactDB.open() {
+                    
+                    let insertSQL = "INSERT INTO FAVS (MOVIEID) VALUES ('\(id)')"
+                    
+                    let result = contactDB.executeUpdate(insertSQL,
+                        withArgumentsInArray: nil)
+                    
+                    if !result {
+                        print("Failed to add Fav")
+                        print("Error: \(contactDB.lastErrorMessage())")
+                    } else {
+                        print("Fav Added")
+                        self.favState = 1
+                        favButton.setImage(UIImage(named: "fav"), forState: UIControlState.Normal)
+
+                        
+                    }
+                } else {
+                    print("Error: \(contactDB.lastErrorMessage())")
+                }
+                
+            }
+        
+        } else {
+            //        DELETE FROM student_info WHERE RollNo=
+            if let id = self.movieObjs?.id {
+                if contactDB.open() {
+                    
+                    let insertSQL = "DELETE FROM FAVS WHERE MOVIEID='\(id)'"
+                    
+                    let result = contactDB.executeUpdate(insertSQL,
+                        withArgumentsInArray: nil)
+                    
+                    if !result {
+                        print("Failed to add Fav")
+                        print("Error: \(contactDB.lastErrorMessage())")
+                    } else {
+                        print("Fav Deleted")
+                        favButton.setImage(UIImage(named: "unfav"), forState: UIControlState.Normal)
+                        self.favState = 0
+                    }
+                } else {
+                    print("Error: \(contactDB.lastErrorMessage())")
+                }
+                
+            }
+            
+            
+        }
+        
+
+
+    }
+    
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         if collectionView == self.collectionView {
@@ -87,7 +182,6 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
             } else {
                 cell.mainImageView.image = UIImage(named: "notfound")
             }
-            
             
             return cell
         }
@@ -263,7 +357,6 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
                 avatarTransform = CATransform3DScale(avatarTransform, 1.0 - avatarScaleFactor, 1.0 - avatarScaleFactor, 0)
                 
                 if offset <= offset_HeaderStop {
-                    
                     if posterView.layer.zPosition < header.layer.zPosition{
                         header.layer.zPosition = 0
                     }
@@ -282,10 +375,36 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
         
     }
     
-
+    func checkFavState() {
+        let contactDB = FMDatabase(path: databasePath as String)
+        if self.movieId == -1 {
+            return
+        }
+        
+        if contactDB.open() {
+            let querySQL = "SELECT MOVIEID FROM FAVS WHERE MOVIEID = '\(self.movieId)'"
+            
+            let results:FMResultSet? = contactDB.executeQuery(querySQL,
+                withArgumentsInArray: nil)
+            
+            if results?.next() == true {
+                print("Found and ID = \(results?.stringForColumn("MOVIEID"))")
+                favButton.setImage(UIImage(named: "fav"), forState: UIControlState.Normal)
+                self.favState = 1
+                
+            } else {
+                print("Record not found")
+            }
+            contactDB.close()
+        } else {
+            print("Error: \(contactDB.lastErrorMessage())")
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkDB()
         PKHUD.sharedHUD.show()
         scrollView.delegate = self
         collectionView.dataSource = self
@@ -303,6 +422,7 @@ class detailMoviePageController: UIViewController, UIScrollViewDelegate, UIColle
         fetchMovieDetail()
         fetchSimilarMovieDetail()
         fetchCastProfiles()
+        checkFavState()
         
         
 

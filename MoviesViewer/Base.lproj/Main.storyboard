@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="enW-nX-CAZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -75,7 +75,14 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBarItem key="tabBarItem" title="Now Playing" image="nowplaying" id="fRd-Dt-j77"/>
-                    <navigationItem key="navigationItem" id="H0p-zY-6fl"/>
+                    <navigationItem key="navigationItem" id="H0p-zY-6fl">
+                        <barButtonItem key="rightBarButtonItem" systemItem="bookmarks" id="H82-57-AyU">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <segue destination="HKz-5J-lUs" kind="push" id="yZI-38-Tjr"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="pQu-2J-wQb" id="uOM-Fq-mte"/>
                         <outlet property="networkProblemView" destination="yx0-n2-aF5" id="Fh3-us-59h"/>
@@ -241,6 +248,13 @@
                                                     <outletCollection property="gestureRecognizers" destination="uqx-ya-LSg" appends="YES" id="6Br-6B-Ub7"/>
                                                 </connections>
                                             </view>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4bp-A8-G0O">
+                                                <rect key="frame" x="263" y="233" width="49" height="39"/>
+                                                <state key="normal" title="Add" image="unfav"/>
+                                                <connections>
+                                                    <action selector="addFavTap:" destination="zsU-Wg-N0j" eventType="touchUpInside" id="2YF-py-jTT"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <gestureRecognizers/>
                                         <constraints>
@@ -313,6 +327,7 @@
                     <connections>
                         <outlet property="castProfilesCollection" destination="bAo-xf-lXR" id="rFr-Mk-4GP"/>
                         <outlet property="collectionView" destination="2Jp-w9-18L" id="mqd-zf-Vwc"/>
+                        <outlet property="favButton" destination="4bp-A8-G0O" id="x6z-df-gdn"/>
                         <outlet property="header" destination="TvV-m7-jgK" id="z7m-1z-591"/>
                         <outlet property="movieOverviewLabel" destination="qf8-Ua-fwj" id="PXF-V2-hQi"/>
                         <outlet property="movieTitleLabel" destination="tZz-PU-Gkk" id="37Q-h2-duw"/>
@@ -393,7 +408,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kza-fB-nzb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1286" y="506"/>
+            <point key="canvasLocation" x="946" y="506"/>
+        </scene>
+        <!--Fav View Controller-->
+        <scene sceneID="nQA-lI-FJK">
+            <objects>
+                <viewController id="HKz-5J-lUs" customClass="FavViewController" customModule="MoviesViewer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gcK-kO-g30"/>
+                        <viewControllerLayoutGuide type="bottom" id="Kwd-UR-fVs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ntc-gi-ets">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.10980392156862745" green="0.10980392156862745" blue="0.10980392156862745" alpha="1" colorSpace="calibratedRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="t9q-cV-LJr"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N25-em-Ibz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1464" y="498"/>
         </scene>
         <!--Nav Controller-->
         <scene sceneID="IXw-lQ-wG8">
@@ -419,10 +453,28 @@
             </objects>
             <point key="canvasLocation" x="10" y="488"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="RI1-HS-cOS">
+            <objects>
+                <viewController id="Xvx-Zj-HhG" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="daz-uJ-fua"/>
+                        <viewControllerLayoutGuide type="bottom" id="UFw-qu-Wp9"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8oN-Rd-FoO">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="g4S-ja-2oK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
     </scenes>
     <resources>
         <image name="networkfan" width="240" height="240"/>
         <image name="nowplaying" width="25" height="25"/>
+        <image name="unfav" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="vnK-61-jGn"/>

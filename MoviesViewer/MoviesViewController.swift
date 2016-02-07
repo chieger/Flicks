@@ -19,7 +19,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     var filteredMovies: [NSDictionary]?
     var header: MJRefreshNormalHeader? = nil
     var endpoint: String!
-
+    var kbHide: Int = 0
     @IBOutlet weak var networkProblemView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -35,7 +35,7 @@ class MoviesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         // a little trick to distinguish imageView from other views
-        if ((touch.description.rangeOfString("contentOffset")) != nil) {
+        if (searchBar.isFirstResponder()) {
             return true
         } else {
             return false
